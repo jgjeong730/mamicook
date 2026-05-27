@@ -9,17 +9,19 @@
     :root {
       color-scheme: light;
       --ink: #111111;
-      --paper: #fffdf5;
+      --paper: #fffef8;
       --panel: #ffffff;
-      --accent: #005fcc;
-      --accent-dark: #003f88;
-      --warn: #b42318;
-      --line: #1f2937;
+      --line: #d9d9d9;
+      --line-strong: #111111;
+      --green: #34780f;
+      --blue: #005fcc;
+      --red: #b42318;
+      --gold: #f5b400;
     }
 
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: rgba(0, 95, 204, 0.22);
+      -webkit-tap-highlight-color: rgba(0, 95, 204, 0.2);
     }
 
     body {
@@ -28,12 +30,13 @@
       color: var(--ink);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 24px;
-      line-height: 1.55;
+      line-height: 1.45;
       letter-spacing: 0;
     }
 
     button {
       font: inherit;
+      color: inherit;
       touch-action: manipulation;
     }
 
@@ -42,84 +45,273 @@
       max-width: 760px;
       min-height: 100vh;
       margin: 0 auto;
-      padding: 22px 16px 34px;
+      padding: 26px 16px 40px;
+      background: #ffffff;
     }
 
     .screen-title {
-      font-size: clamp(40px, 10vw, 64px);
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
-
-    .section-title {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 34px 0 14px;
-      font-size: clamp(32px, 7vw, 44px);
+      gap: 18px;
+      margin: 0 0 34px;
+      font-size: clamp(40px, 10vw, 58px);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .screen-title::after {
+      content: "";
+      height: 3px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .category-heading {
+      margin: 38px 0 18px;
+      text-align: center;
+      font-size: clamp(34px, 8vw, 48px);
       font-weight: 900;
       line-height: 1.15;
     }
 
-    .recipe-button,
-    .home-button {
-      width: 100%;
-      min-height: 86px;
-      border: 4px solid var(--line);
-      border-radius: 8px;
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 5px 0 var(--line);
-      font-size: clamp(30px, 8vw, 46px);
-      font-weight: 900;
-      line-height: 1.16;
-      text-align: left;
+    .category-heading span {
+      margin: 0 10px;
+      font-size: 0.78em;
     }
 
-    .recipe-button:active,
-    .home-button:active,
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      overflow: hidden;
+      border: 3px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .category-button {
+      min-height: 106px;
+      padding: 12px 8px;
+      border: 0;
+      border-right: 2px solid var(--line);
+      border-bottom: 2px solid var(--line);
+      background: #ffffff;
+      font-size: clamp(25px, 6.2vw, 36px);
+      font-weight: 800;
+      line-height: 1.15;
+      text-align: center;
+      word-break: keep-all;
+    }
+
+    .category-button:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .category-button:nth-last-child(-n + 3) {
+      border-bottom: 0;
+    }
+
+    .category-button:active,
+    .recipe-card:active,
+    .nav-button:active,
+    .large-button:active,
     .ingredient-button:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 var(--line);
+      transform: scale(0.985);
     }
 
-    .recipe-button {
-      display: flex;
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 74px 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 20px 20px;
+      gap: 8px;
+      margin: -26px -16px 20px;
+      padding: 16px;
+      border-bottom: 2px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
     }
 
-    .recipe-button .arrow {
-      flex: 0 0 auto;
-      font-size: 38px;
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 66px;
+      min-height: 66px;
+      border: 0;
+      background: transparent;
+      font-size: 54px;
+      font-weight: 700;
       line-height: 1;
     }
 
-    .home-button {
-      margin-top: 34px;
-      padding: 22px 18px;
-      background: var(--warn);
+    .current-category {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 66px;
+      font-size: clamp(30px, 7.2vw, 42px);
+      font-weight: 900;
+      line-height: 1.1;
       text-align: center;
+    }
+
+    .sort-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 66px;
+      padding: 0 6px;
+      font-size: clamp(24px, 5.8vw, 34px);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .recipe-list {
+      display: grid;
+      gap: 26px;
+    }
+
+    .recipe-card {
+      display: grid;
+      grid-template-columns: minmax(132px, 38%) 1fr;
+      gap: 18px;
+      width: 100%;
+      min-height: 178px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      text-align: left;
+    }
+
+    .thumb {
+      position: relative;
+      min-height: 178px;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 2px solid var(--line);
+      background: linear-gradient(135deg, #f4dfb8, #b94a20);
+    }
+
+    .thumb::before {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.18);
+    }
+
+    .thumb::after {
+      content: attr(data-short);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111111;
+      font-size: clamp(34px, 8vw, 52px);
+      font-weight: 900;
+      text-shadow: 0 2px 0 #ffffff;
+    }
+
+    .thumb.jorim { background: linear-gradient(135deg, #9b3b15, #f4c27a 52%, #482111); }
+    .thumb.kimchi { background: linear-gradient(135deg, #fff3d6, #e95a24 56%, #2f7d32); }
+    .thumb.tang { background: linear-gradient(135deg, #d93025, #ffbf3f 48%, #2364aa); }
+    .thumb.jjim { background: linear-gradient(135deg, #63320f, #d99a45 50%, #f8e3b0); }
+    .thumb.namul { background: linear-gradient(135deg, #f6f1d5, #7cb342 52%, #ffffff); }
+
+    .recipe-title {
+      margin: 4px 0 6px;
+      color: var(--green);
+      font-size: clamp(30px, 7.2vw, 42px);
+      font-weight: 900;
+      line-height: 1.12;
+      word-break: keep-all;
+    }
+
+    .recipe-desc {
+      display: -webkit-box;
+      margin: 0 0 8px;
+      overflow: hidden;
+      color: #222222;
+      font-size: clamp(24px, 5.9vw, 34px);
+      font-weight: 650;
+      line-height: 1.28;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: clamp(22px, 5.4vw, 30px);
+      font-weight: 800;
+    }
+
+    .rating {
+      color: #111111;
+    }
+
+    .star {
+      color: var(--gold);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 40px;
+      padding: 4px 10px;
+      border: 2px solid #c7c7c7;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #333333;
+      font-size: clamp(20px, 5vw, 28px);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .section-title {
+      margin: 34px 0 14px;
+      font-size: clamp(34px, 8vw, 48px);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .detail-title {
+      margin: 16px 0 10px;
+      color: var(--green);
+      font-size: clamp(42px, 10vw, 64px);
+      font-weight: 900;
+      line-height: 1.08;
+      word-break: keep-all;
+    }
+
+    .detail-hero {
+      min-height: 220px;
+      margin-top: 18px;
+      border-radius: 18px;
     }
 
     .ingredient-button {
       display: grid;
-      grid-template-columns: 48px 1fr;
+      grid-template-columns: 54px 1fr;
       align-items: center;
       gap: 12px;
       width: 100%;
-      min-height: 76px;
+      min-height: 82px;
       padding: 16px 14px;
-      border: 4px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      color: var(--ink);
-      box-shadow: 0 4px 0 var(--line);
-      font-size: clamp(26px, 6.5vw, 36px);
-      font-weight: 800;
+      border: 4px solid var(--line-strong);
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 4px 0 var(--line-strong);
+      font-size: clamp(27px, 6.6vw, 38px);
+      font-weight: 850;
       text-align: left;
     }
 
@@ -137,64 +329,228 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      border: 3px solid var(--line);
-      border-radius: 6px;
+      width: 46px;
+      height: 46px;
+      border: 3px solid var(--line-strong);
+      border-radius: 8px;
       background: #ffffff;
-      font-size: 28px;
+      font-size: 32px;
       line-height: 1;
     }
 
     .step-card {
-      border: 4px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
+      border: 4px solid var(--line-strong);
+      border-radius: 10px;
+      background: #ffffff;
       padding: 18px 16px;
-      box-shadow: 0 4px 0 var(--line);
+      box-shadow: 0 4px 0 var(--line-strong);
     }
 
     .step-number {
       display: inline-block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       background: #111111;
       color: #ffffff;
-      font-size: clamp(24px, 6vw, 32px);
+      font-size: clamp(25px, 6vw, 34px);
       font-weight: 900;
       line-height: 1.1;
     }
 
     .step-text {
       margin: 0;
-      font-size: clamp(26px, 6.5vw, 36px);
-      font-weight: 750;
-      line-height: 1.45;
+      font-size: clamp(27px, 6.6vw, 38px);
+      font-weight: 760;
+      line-height: 1.44;
     }
 
-    .helper-text {
-      margin-top: 10px;
-      font-size: clamp(24px, 5.8vw, 32px);
-      font-weight: 800;
-      color: #2f3a4a;
+    .large-button {
+      width: 100%;
+      min-height: 88px;
+      margin-top: 34px;
+      padding: 20px 16px;
+      border: 4px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--red);
+      color: #ffffff;
+      box-shadow: 0 5px 0 var(--line-strong);
+      font-size: clamp(32px, 8vw, 46px);
+      font-weight: 900;
+      line-height: 1.14;
+      text-align: center;
+    }
+
+    .add-button {
+      width: 100%;
+      min-height: 86px;
+      margin-bottom: 24px;
+      padding: 18px 16px;
+      border: 4px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--blue);
+      color: #ffffff;
+      box-shadow: 0 5px 0 var(--line-strong);
+      font-size: clamp(30px, 7.5vw, 44px);
+      font-weight: 900;
+      line-height: 1.14;
+      text-align: center;
+    }
+
+    .form-label {
+      display: block;
+      margin: 22px 0 8px;
+      font-size: clamp(28px, 6.8vw, 38px);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      border: 4px solid var(--line-strong);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+      font-size: clamp(26px, 6.4vw, 36px);
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 76px;
+      padding: 12px 14px;
+    }
+
+    .form-textarea {
+      min-height: 180px;
+      padding: 14px;
+      resize: vertical;
+    }
+
+    .form-help {
+      margin: 8px 0 0;
+      color: #444444;
+      font-size: clamp(22px, 5.4vw, 30px);
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .auto-fill-button {
+      width: 100%;
+      min-height: 82px;
+      margin-top: 18px;
+      padding: 18px 14px;
+      border: 4px solid var(--line-strong);
+      border-radius: 10px;
+      background: #0f7b3f;
+      color: #ffffff;
+      box-shadow: 0 5px 0 var(--line-strong);
+      font-size: clamp(28px, 7vw, 40px);
+      font-weight: 900;
+      line-height: 1.14;
+      text-align: center;
     }
 
     .hidden {
       display: none !important;
     }
+
+    @media (max-width: 420px) {
+      .app-shell {
+        padding-right: 12px;
+        padding-left: 12px;
+      }
+
+      .top-bar {
+        margin-right: -12px;
+        margin-left: -12px;
+        padding-right: 12px;
+        padding-left: 12px;
+        grid-template-columns: 62px 1fr auto;
+      }
+
+      .recipe-card {
+        grid-template-columns: 132px 1fr;
+        gap: 14px;
+      }
+
+      .thumb {
+        min-height: 160px;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="app-shell">
-    <section id="homeScreen">
-      <h1 class="screen-title">엄마 레시피</h1>
-      <p class="helper-text">요리 이름을 크게 눌러서 보세요.</p>
-      <div id="recipeList" class="mt-8 grid gap-5"></div>
+    <section id="categoryScreen">
+      <h1 class="screen-title">레시피 분류</h1>
+
+      <h2 class="category-heading"><span>◎</span>종류별<span>◎</span></h2>
+      <div id="kindGrid" class="category-grid"></div>
+    </section>
+
+    <section id="listScreen" class="hidden">
+      <div class="top-bar">
+        <button id="listBackButton" type="button" class="icon-button" aria-label="뒤로">‹</button>
+        <div id="listTitle" class="current-category">전체</div>
+        <div class="sort-label" aria-label="정렬">☰ 추천순</div>
+      </div>
+      <button id="openAddButton" type="button" class="add-button">+ 새 메뉴 추가</button>
+      <div id="recipeList" class="recipe-list"></div>
+    </section>
+
+    <section id="addScreen" class="hidden">
+      <div class="top-bar">
+        <button id="addBackButton" type="button" class="icon-button" aria-label="뒤로">‹</button>
+        <div class="current-category">새 메뉴</div>
+        <div class="sort-label">저장</div>
+      </div>
+
+      <form id="addRecipeForm">
+        <label class="form-label" for="newName">음식 이름</label>
+        <input id="newName" class="form-input" type="text" autocomplete="off" required placeholder="예: 오이냉국">
+
+        <label class="form-label" for="newCategory">분류</label>
+        <select id="newCategory" class="form-select" required></select>
+
+        <button id="autoFillButton" type="button" class="auto-fill-button">자동으로 채우기</button>
+        <p class="form-help">음식 이름과 분류를 보고 준비물과 만드는 법을 먼저 채워줍니다.</p>
+
+        <label class="form-label" for="newIngredients">준비물</label>
+        <textarea id="newIngredients" class="form-textarea" required placeholder="한 줄에 하나씩 적으세요.&#10;예: 오이 1개&#10;소금 조금"></textarea>
+        <p class="form-help">준비물은 한 줄에 하나씩 적으면 됩니다.</p>
+
+        <label class="form-label" for="newSteps">만드는 법</label>
+        <textarea id="newSteps" class="form-textarea" required placeholder="한 줄에 한 단계씩 적으세요.&#10;예: 오이를 썰어 주세요.&#10;양념을 넣고 섞어 주세요."></textarea>
+        <p class="form-help">만드는 법도 한 줄에 한 단계씩 적으면 됩니다.</p>
+
+        <div class="button-row">
+          <button type="submit" class="large-button">저장하기</button>
+          <button id="cancelAddButton" type="button" class="large-button">취소하고 돌아가기</button>
+        </div>
+      </form>
     </section>
 
     <section id="detailScreen" class="hidden">
-      <h1 id="recipeTitle" class="screen-title"></h1>
+      <div class="top-bar">
+        <button id="detailBackButton" type="button" class="icon-button" aria-label="뒤로">‹</button>
+        <div id="detailCategory" class="current-category">레시피</div>
+        <div class="sort-label">보기</div>
+      </div>
+
+      <h1 id="recipeTitle" class="detail-title"></h1>
+      <div id="detailHero" class="thumb detail-hero" aria-hidden="true"></div>
 
       <h2 class="section-title">준비물</h2>
       <div id="ingredientList" class="grid gap-4"></div>
@@ -202,128 +558,332 @@
       <h2 class="section-title">만드는 법</h2>
       <div id="stepList" class="grid gap-5"></div>
 
-      <button id="backHomeButton" type="button" class="home-button">처음 화면으로</button>
+      <button id="backHomeButton" type="button" class="large-button">처음 화면으로</button>
     </section>
   </main>
 
   <script>
-    const recipes = [
+    const kindCategories = [
+      "전체", "밑반찬", "메인반찬",
+      "국/탕", "찌게", "디저트",
+      "면/만두", "밥/죽/떡", "김치/젓갈/장",
+      "양념/소스/잼", "양식", "샐러드",
+      "스프", "빵", "과자",
+      "차/음료/술", "기타"
+    ];
+
+    const baseRecipes = [
       {
         name: "소고기 장조림",
-        ingredients: [
-          "소고기 홍두깨살 600g",
-          "메추리알 20개",
-          "꽈리고추 한 줌",
-          "진간장 1컵",
-          "물 4컵",
-          "설탕 3큰술",
-          "마늘 8쪽"
-        ],
-        steps: [
-          "소고기는 찬물에 30분 담가 핏물을 빼세요.",
-          "냄비에 고기와 물을 넣고 40분 정도 푹 삶으세요.",
-          "고기를 건져 결대로 먹기 좋게 찢으세요.",
-          "육수에 간장, 설탕, 마늘을 넣고 고기와 메추리알을 넣어 조리세요.",
-          "마지막에 꽈리고추를 넣고 5분 더 끓이면 됩니다."
-        ]
+        categories: ["전체", "밑반찬", "조림", "소고기", "일상", "도시락"],
+        desc: "짭조름하고 부드러운 밥도둑 장조림입니다.",
+        servings: "4인분",
+        time: "60분",
+        rating: "5.0",
+        review: "8",
+        thumb: "jorim",
+        short: "장",
+        ingredients: ["소고기 홍두깨살 600g", "메추리알 20개", "꽈리고추 한 줌", "진간장 1컵", "물 4컵", "설탕 3큰술", "마늘 8쪽"],
+        steps: ["소고기는 찬물에 30분 담가 핏물을 빼세요.", "냄비에 고기와 물을 넣고 40분 정도 푹 삶으세요.", "고기를 건져 결대로 먹기 좋게 찢으세요.", "육수에 간장, 설탕, 마늘을 넣고 고기와 메추리알을 넣어 조리세요.", "마지막에 꽈리고추를 넣고 5분 더 끓이면 됩니다."]
       },
       {
         name: "연근조림",
-        ingredients: [
-          "연근 500g",
-          "식초 1큰술",
-          "진간장 5큰술",
-          "물 1컵",
-          "올리고당 3큰술",
-          "참기름 1큰술",
-          "통깨 조금"
-        ],
-        steps: [
-          "연근은 껍질을 벗기고 도톰하게 썰어 주세요.",
-          "끓는 물에 식초를 넣고 연근을 5분 데치세요.",
-          "팬에 간장, 물, 올리고당을 넣고 연근을 넣어 중불에서 조리세요.",
-          "국물이 자작해지면 약불로 줄이고 윤기가 나게 뒤적이세요.",
-          "불을 끄고 참기름과 통깨를 넣어 마무리하세요."
-        ]
+        categories: ["전체", "밑반찬", "조림", "채소류", "일상", "도시락"],
+        desc: "아삭하고 윤기 나는 달콤 짭조름한 연근 반찬입니다.",
+        servings: "3인분",
+        time: "35분",
+        rating: "5.0",
+        review: "5",
+        thumb: "jorim",
+        short: "연",
+        ingredients: ["연근 500g", "식초 1큰술", "진간장 5큰술", "물 1컵", "올리고당 3큰술", "참기름 1큰술", "통깨 조금"],
+        steps: ["연근은 껍질을 벗기고 도톰하게 썰어 주세요.", "끓는 물에 식초를 넣고 연근을 5분 데치세요.", "팬에 간장, 물, 올리고당을 넣고 연근을 넣어 중불에서 조리세요.", "국물이 자작해지면 약불로 줄이고 윤기가 나게 뒤적이세요.", "불을 끄고 참기름과 통깨를 넣어 마무리하세요."]
       },
       {
         name: "물김치",
-        ingredients: [
-          "배추 반 포기",
-          "무 1토막",
-          "쪽파 한 줌",
-          "배 반 개",
-          "마늘 5쪽",
-          "생강 조금",
-          "굵은소금 3큰술",
-          "물 8컵"
-        ],
-        steps: [
-          "배추와 무는 먹기 좋게 썰고 소금에 40분 절이세요.",
-          "절인 채소는 가볍게 헹궈 물기를 빼세요.",
-          "배, 마늘, 생강을 갈아 면보에 걸러 국물만 준비하세요.",
-          "큰 통에 채소와 쪽파를 담고 양념 국물과 물을 부으세요.",
-          "실온에서 반나절 두었다가 냉장고에 넣어 시원하게 드세요."
-        ]
+        categories: ["전체", "김치/젓갈/장", "일상", "손님접대", "채소류"],
+        desc: "시원하고 깔끔하게 먹기 좋은 국물 김치입니다.",
+        servings: "6인분",
+        time: "50분",
+        rating: "5.0",
+        review: "4",
+        thumb: "kimchi",
+        short: "김",
+        ingredients: ["배추 반 포기", "무 1토막", "쪽파 한 줌", "배 반 개", "마늘 5쪽", "생강 조금", "굵은소금 3큰술", "물 8컵"],
+        steps: ["배추와 무는 먹기 좋게 썰고 소금에 40분 절이세요.", "절인 채소는 가볍게 헹궈 물기를 빼세요.", "배, 마늘, 생강을 갈아 면보에 걸러 국물만 준비하세요.", "큰 통에 채소와 쪽파를 담고 양념 국물과 물을 부으세요.", "실온에서 반나절 두었다가 냉장고에 넣어 시원하게 드세요."]
       },
       {
         name: "갈비찜",
-        ingredients: [
-          "소갈비 1kg",
-          "무 1토막",
-          "당근 1개",
-          "표고버섯 4개",
-          "진간장 반 컵",
-          "배즙 반 컵",
-          "다진 마늘 2큰술",
-          "참기름 1큰술"
-        ],
-        steps: [
-          "갈비는 찬물에 1시간 담가 핏물을 빼세요.",
-          "끓는 물에 갈비를 5분 데친 뒤 깨끗이 씻으세요.",
-          "냄비에 갈비, 간장, 배즙, 마늘, 물을 넣고 40분 끓이세요.",
-          "무와 당근, 버섯을 넣고 약불에서 25분 더 익히세요.",
-          "국물이 적당히 졸면 참기름을 둘러 마무리하세요."
-        ]
+        categories: ["전체", "메인반찬", "찜", "소고기", "손님접대", "명절"],
+        desc: "부드러운 갈비와 달큰한 채소가 잘 어울리는 잔치 음식입니다.",
+        servings: "4인분",
+        time: "90분",
+        rating: "5.0",
+        review: "7",
+        thumb: "jjim",
+        short: "갈",
+        ingredients: ["소갈비 1kg", "무 1토막", "당근 1개", "표고버섯 4개", "진간장 반 컵", "배즙 반 컵", "다진 마늘 2큰술", "참기름 1큰술"],
+        steps: ["갈비는 찬물에 1시간 담가 핏물을 빼세요.", "끓는 물에 갈비를 5분 데친 뒤 깨끗이 씻으세요.", "냄비에 갈비, 간장, 배즙, 마늘, 물을 넣고 40분 끓이세요.", "무와 당근, 버섯을 넣고 약불에서 25분 더 익히세요.", "국물이 적당히 졸면 참기름을 둘러 마무리하세요."]
       },
       {
         name: "매운탕",
-        ingredients: [
-          "생선 1마리",
-          "무 1토막",
-          "대파 1대",
-          "쑥갓 한 줌",
-          "청양고추 2개",
-          "고춧가루 3큰술",
-          "고추장 1큰술",
-          "다진 마늘 1큰술"
-        ],
-        steps: [
-          "생선은 깨끗이 손질하고 무는 납작하게 썰어 주세요.",
-          "냄비에 물과 무를 넣고 무가 반쯤 익을 때까지 끓이세요.",
-          "고춧가루, 고추장, 마늘을 풀고 생선을 넣으세요.",
-          "중불에서 15분 정도 끓이며 거품을 걷어 주세요.",
-          "대파, 고추, 쑥갓을 넣고 한소끔 더 끓이면 됩니다."
-        ]
+        categories: ["전체", "국/탕", "해물류", "해장", "술안주"],
+        desc: "칼칼하고 시원한 국물 맛이 좋은 생선 매운탕입니다.",
+        servings: "3인분",
+        time: "40분",
+        rating: "5.0",
+        review: "6",
+        thumb: "tang",
+        short: "탕",
+        ingredients: ["생선 1마리", "무 1토막", "대파 1대", "쑥갓 한 줌", "청양고추 2개", "고춧가루 3큰술", "고추장 1큰술", "다진 마늘 1큰술"],
+        steps: ["생선은 깨끗이 손질하고 무는 납작하게 썰어 주세요.", "냄비에 물과 무를 넣고 무가 반쯤 익을 때까지 끓이세요.", "고춧가루, 고추장, 마늘을 풀고 생선을 넣으세요.", "중불에서 15분 정도 끓이며 거품을 걷어 주세요.", "대파, 고추, 쑥갓을 넣고 한소끔 더 끓이면 됩니다."]
+      },
+      {
+        name: "숙주나물무침",
+        categories: ["전체", "밑반찬", "무침", "채소류", "초스피드", "일상"],
+        desc: "아삭하게 데쳐 바로 무치는 쉬운 밑반찬입니다.",
+        servings: "2인분",
+        time: "15분",
+        rating: "5.0",
+        review: "3",
+        thumb: "namul",
+        short: "숙",
+        ingredients: ["숙주 300g", "쪽파 조금", "다진 마늘 반 큰술", "국간장 1큰술", "참기름 1큰술", "소금 조금", "통깨 조금"],
+        steps: ["숙주는 깨끗이 씻어 물기를 빼세요.", "끓는 물에 숙주를 1분 정도 데치세요.", "찬물에 헹군 뒤 물기를 꼭 짜세요.", "마늘, 국간장, 참기름, 소금을 넣고 조물조물 무치세요.", "쪽파와 통깨를 올려 마무리하세요."]
       }
     ];
 
-    const homeScreen = document.querySelector("#homeScreen");
+    const menuNamesByCategory = {
+      "밑반찬": [
+        "소고기 장조림", "연근조림", "숙주나물무침", "멸치볶음", "감자채볶음",
+        "콩자반", "오이무침", "시금치나물", "무생채", "어묵볶음",
+        "진미채무침", "가지볶음", "도라지무침", "우엉조림", "깻잎장아찌",
+        "마늘쫑볶음", "두부조림", "고사리나물", "브로콜리무침", "새송이버섯볶음"
+      ],
+      "메인반찬": [
+        "갈비찜", "제육볶음", "닭볶음탕", "불고기", "고등어구이",
+        "돼지갈비찜", "오징어볶음", "닭갈비", "생선전", "두부두루치기",
+        "수육", "LA갈비구이", "떡갈비", "코다리조림", "삼치구이",
+        "돼지고기김치찜", "훈제오리볶음", "소고기버섯볶음", "낙지볶음", "닭봉간장조림"
+      ],
+      "국/탕": [
+        "매운탕", "소고기무국", "미역국", "북엇국", "콩나물국",
+        "감자국", "시래기된장국", "어묵탕", "닭곰탕", "갈비탕",
+        "떡국", "육개장", "황태해장국", "배추된장국", "조개탕",
+        "오징어무국", "계란국", "아욱국", "홍합탕", "사골곰탕"
+      ],
+      "찌게": [
+        "김치찌게", "된장찌게", "순두부찌게", "참치김치찌게", "부대찌게",
+        "청국장찌게", "고추장찌게", "두부찌게", "동태찌게", "비지찌게",
+        "돼지고기찌게", "버섯찌게", "차돌된장찌게", "스팸김치찌게", "애호박찌게",
+        "꽁치김치찌게", "해물순두부찌게", "소고기된장찌게", "감자짜글이", "고등어김치찌게"
+      ],
+      "김치/젓갈/장": [
+        "물김치", "배추김치", "깍두기", "파김치", "오이소박이",
+        "열무김치", "총각김치", "겉절이", "백김치", "갓김치",
+        "동치미", "부추김치", "무말랭이무침", "간장게장", "양념게장",
+        "새우젓무침", "오징어젓갈무침", "명란젓무침", "쌈장", "고추장아찌"
+      ]
+    };
+
+    const thumbByCategory = {
+      "밑반찬": "namul",
+      "메인반찬": "jjim",
+      "국/탕": "tang",
+      "찌게": "tang",
+      "김치/젓갈/장": "kimchi"
+    };
+
+    function makeSampleRecipe(name, category, index) {
+      return {
+        name,
+        categories: ["전체", category],
+        desc: `${name} 맛있게 만드는 집밥 레시피입니다.`,
+        servings: index % 3 === 0 ? "4인분" : "2인분",
+        time: category === "국/탕" || category === "찌게" ? "40분" : "25분",
+        rating: "5.0",
+        review: String((index % 8) + 1),
+        thumb: thumbByCategory[category] || "jorim",
+        short: name.slice(0, 1),
+        ingredients: [
+          `${name} 주재료`,
+          "대파 조금",
+          "다진 마늘 1큰술",
+          "간장 또는 소금 적당량",
+          "참기름 조금",
+          "통깨 조금"
+        ],
+        steps: [
+          "재료를 깨끗이 씻고 먹기 좋게 손질하세요.",
+          "팬이나 냄비를 달군 뒤 준비한 재료를 넣으세요.",
+          "양념을 넣고 중불에서 골고루 익히세요.",
+          "간을 보고 부족하면 소금이나 간장으로 맞추세요.",
+          "그릇에 담고 참기름과 통깨를 올려 마무리하세요."
+        ]
+      };
+    }
+
+    const STORAGE_KEY = "mamicook_custom_recipes";
+
+    let recipes = [
+      ...baseRecipes,
+      ...Object.entries(menuNamesByCategory).flatMap(([category, names]) =>
+        names
+          .filter((name) => !baseRecipes.some((recipe) => recipe.name === name))
+          .map((name, index) => makeSampleRecipe(name, category, index + 1))
+      )
+    ];
+
+    const categoryScreen = document.querySelector("#categoryScreen");
+    const listScreen = document.querySelector("#listScreen");
+    const addScreen = document.querySelector("#addScreen");
     const detailScreen = document.querySelector("#detailScreen");
+    const kindGrid = document.querySelector("#kindGrid");
     const recipeList = document.querySelector("#recipeList");
+    const listTitle = document.querySelector("#listTitle");
     const recipeTitle = document.querySelector("#recipeTitle");
+    const detailCategory = document.querySelector("#detailCategory");
+    const detailHero = document.querySelector("#detailHero");
     const ingredientList = document.querySelector("#ingredientList");
     const stepList = document.querySelector("#stepList");
-    const backHomeButton = document.querySelector("#backHomeButton");
+    const addRecipeForm = document.querySelector("#addRecipeForm");
+    const newCategory = document.querySelector("#newCategory");
+    const newName = document.querySelector("#newName");
+    const newIngredients = document.querySelector("#newIngredients");
+    const newSteps = document.querySelector("#newSteps");
 
-    function showHome() {
-      detailScreen.classList.add("hidden");
-      homeScreen.classList.remove("hidden");
+    let currentCategory = "전체";
+
+    function loadCustomRecipes() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (Array.isArray(saved)) {
+          recipes = [...recipes, ...saved];
+        }
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function getCustomRecipes() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCustomRecipe(recipe) {
+      const saved = getCustomRecipes();
+      saved.push(recipe);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      recipes.push(recipe);
+    }
+
+    function guessMainIngredient(name) {
+      const candidates = [
+        "김치", "돼지고기", "소고기", "닭고기", "두부", "감자", "고등어", "오징어",
+        "멸치", "콩나물", "숙주", "무", "배추", "연근", "갈비", "생선", "버섯",
+        "애호박", "계란", "어묵", "오이", "시금치", "가지", "깻잎"
+      ];
+      return candidates.find((item) => name.includes(item)) || name;
+    }
+
+    function makeAutoRecipe(name, category) {
+      const main = guessMainIngredient(name);
+      const commonIngredients = {
+        "밑반찬": [main, "대파 조금", "다진 마늘 1큰술", "진간장 2큰술", "설탕 반 큰술", "참기름 1큰술", "통깨 조금"],
+        "메인반찬": [main, "양파 반 개", "대파 1대", "다진 마늘 1큰술", "진간장 3큰술", "맛술 1큰술", "후추 조금"],
+        "국/탕": [main, "무 또는 양파 조금", "대파 1대", "다진 마늘 1큰술", "국간장 1큰술", "소금 조금", "물 5컵"],
+        "찌게": [main, "두부 반 모", "대파 1대", "다진 마늘 1큰술", "고춧가루 1큰술", "국간장 1큰술", "물 3컵"],
+        "김치/젓갈/장": [main, "굵은소금 적당량", "고춧가루 3큰술", "다진 마늘 1큰술", "액젓 2큰술", "쪽파 조금", "통깨 조금"],
+        "면/만두": [main, "면 또는 만두", "대파 조금", "다진 마늘 반 큰술", "간장 1큰술", "참기름 조금"],
+        "밥/죽/떡": [main, "밥 또는 떡", "물 또는 육수", "소금 조금", "참기름 조금", "김가루 조금"],
+        "양념/소스/잼": [main, "진간장 3큰술", "설탕 1큰술", "다진 마늘 반 큰술", "참기름 조금", "통깨 조금"],
+        "양식": [main, "양파 반 개", "버터 조금", "소금 조금", "후추 조금", "우유 또는 물 조금"],
+        "샐러드": [main, "상추 또는 양상추", "오이 조금", "방울토마토", "올리브오일 1큰술", "소금 조금"],
+        "스프": [main, "양파 반 개", "버터 1큰술", "우유 1컵", "물 1컵", "소금 조금"],
+        "빵": [main, "식빵 또는 밀가루", "계란 1개", "우유 조금", "설탕 조금", "버터 조금"],
+        "과자": [main, "밀가루", "설탕", "계란", "버터", "소금 조금"],
+        "차/음료/술": [main, "물 3컵", "꿀 또는 설탕 조금", "레몬 조금"],
+        "디저트": [main, "설탕 조금", "우유 조금", "견과류 조금"]
+      };
+
+      const commonSteps = {
+        "밑반찬": ["재료를 깨끗이 씻고 먹기 좋게 썰어 주세요.", "팬에 기름을 조금 두르고 재료를 넣어 볶으세요.", "간장, 마늘, 설탕을 넣고 중불에서 골고루 익히세요.", "간을 보고 싱거우면 간장을 조금 더 넣으세요.", "불을 끄고 참기름과 통깨를 넣어 마무리하세요."],
+        "메인반찬": ["재료를 먹기 좋은 크기로 손질하세요.", "양념 재료를 한 그릇에 섞어 주세요.", "팬이나 냄비에 주재료와 양념을 넣고 익히세요.", "중간에 한두 번 뒤집어 양념이 배게 하세요.", "속까지 익으면 대파를 넣고 한 번 더 익혀 마무리하세요."],
+        "국/탕": ["냄비에 물과 무 또는 양파를 넣고 먼저 끓이세요.", "국물이 끓으면 주재료와 마늘을 넣으세요.", "중불에서 재료가 익을 때까지 끓이세요.", "국간장과 소금으로 간을 맞추세요.", "마지막에 대파를 넣고 한소끔 더 끓이세요."],
+        "찌게": ["냄비에 물을 붓고 주재료를 넣어 끓이세요.", "고춧가루, 마늘, 국간장을 넣고 중불에서 끓이세요.", "두부와 대파를 넣고 5분 더 끓이세요.", "간을 보고 싱거우면 소금을 조금 넣으세요.", "국물이 자작하고 맛이 우러나면 불을 끄세요."],
+        "김치/젓갈/장": ["주재료를 깨끗이 씻고 물기를 빼세요.", "소금이나 양념으로 밑간을 해 주세요.", "고춧가루, 마늘, 액젓을 넣고 골고루 버무리세요.", "쪽파를 넣고 한 번 더 가볍게 섞으세요.", "통에 담아 바로 먹거나 냉장고에 넣어 보관하세요."]
+      };
+
+      return {
+        ingredients: commonIngredients[category] || [main, "대파 조금", "다진 마늘 1큰술", "간장 또는 소금 적당량", "참기름 조금", "통깨 조금"],
+        steps: commonSteps[category] || ["재료를 깨끗이 씻고 먹기 좋게 손질하세요.", "팬이나 냄비를 달군 뒤 준비한 재료를 넣으세요.", "양념을 넣고 중불에서 골고루 익히세요.", "간을 보고 부족하면 소금이나 간장으로 맞추세요.", "그릇에 담아 마무리하세요."]
+      };
+    }
+
+    function showOnly(screen) {
+      categoryScreen.classList.toggle("hidden", screen !== "category");
+      listScreen.classList.toggle("hidden", screen !== "list");
+      addScreen.classList.toggle("hidden", screen !== "add");
+      detailScreen.classList.toggle("hidden", screen !== "detail");
       window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function makeCategoryButton(label) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "category-button";
+      button.textContent = label;
+      button.addEventListener("click", () => showList(label));
+      return button;
+    }
+
+    function showList(category) {
+      currentCategory = category;
+      listTitle.textContent = `⌄ ${category}`;
+      recipeList.replaceChildren();
+
+      const filtered = recipes.filter((recipe) => category === "전체" || recipe.categories.includes(category));
+      const list = filtered.length ? filtered : recipes;
+
+      list.forEach((recipe) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "recipe-card";
+        button.innerHTML = `
+          <span class="thumb ${recipe.thumb}" data-short="${recipe.short}" aria-hidden="true"></span>
+          <span>
+            <strong class="recipe-title">${recipe.name}</strong>
+            <span class="recipe-desc">${recipe.desc}</span>
+            <span class="meta-row">
+              <span class="rating"><span class="star">★</span> ${recipe.rating} (${recipe.review})</span>
+              <span class="pill">♙ ${recipe.servings}</span>
+              <span class="pill">◷ ${recipe.time}</span>
+            </span>
+          </span>
+        `;
+        button.addEventListener("click", () => showRecipe(recipe));
+        recipeList.append(button);
+      });
+
+      showOnly("list");
+    }
+
+    function showAddForm() {
+      addRecipeForm.reset();
+      newCategory.value = kindCategories.includes(currentCategory) && currentCategory !== "전체" ? currentCategory : "밑반찬";
+      showOnly("add");
+      newName.focus();
     }
 
     function showRecipe(recipe) {
       recipeTitle.textContent = recipe.name;
+      detailCategory.textContent = currentCategory;
+      detailHero.className = `thumb detail-hero ${recipe.thumb}`;
+      detailHero.dataset.short = recipe.short;
       ingredientList.replaceChildren();
       stepList.replaceChildren();
 
@@ -354,34 +914,77 @@
       recipe.steps.forEach((step, index) => {
         const card = document.createElement("article");
         card.className = "step-card";
-
-        const number = document.createElement("strong");
-        number.className = "step-number";
-        number.textContent = `순서 ${index + 1}`;
-
-        const text = document.createElement("p");
-        text.className = "step-text";
-        text.textContent = step;
-
-        card.append(number, text);
+        card.innerHTML = `<strong class="step-number">순서 ${index + 1}</strong><p class="step-text">${step}</p>`;
         stepList.append(card);
       });
 
-      homeScreen.classList.add("hidden");
-      detailScreen.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "instant" });
+      showOnly("detail");
     }
 
-    recipes.forEach((recipe) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "recipe-button";
-      button.innerHTML = `<span>${recipe.name}</span><span class="arrow" aria-hidden="true">›</span>`;
-      button.addEventListener("click", () => showRecipe(recipe));
-      recipeList.append(button);
+    kindCategories.forEach((category) => kindGrid.append(makeCategoryButton(category)));
+    kindCategories.filter((category) => category !== "전체").forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      newCategory.append(option);
     });
 
-    backHomeButton.addEventListener("click", showHome);
+    loadCustomRecipes();
+
+    document.querySelector("#listBackButton").addEventListener("click", () => showOnly("category"));
+    document.querySelector("#detailBackButton").addEventListener("click", () => showList(currentCategory));
+    document.querySelector("#openAddButton").addEventListener("click", showAddForm);
+    document.querySelector("#addBackButton").addEventListener("click", () => showList(currentCategory));
+    document.querySelector("#cancelAddButton").addEventListener("click", () => showList(currentCategory));
+    document.querySelector("#backHomeButton").addEventListener("click", () => showOnly("category"));
+
+    document.querySelector("#autoFillButton").addEventListener("click", () => {
+      const name = newName.value.trim();
+      const category = newCategory.value;
+
+      if (!name) {
+        alert("먼저 음식 이름을 입력해 주세요.");
+        newName.focus();
+        return;
+      }
+
+      const draft = makeAutoRecipe(name, category);
+      newIngredients.value = draft.ingredients.join("\n");
+      newSteps.value = draft.steps.join("\n");
+    });
+
+    addRecipeForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const name = newName.value.trim();
+      const category = newCategory.value;
+      const ingredients = newIngredients.value.split("\n").map((item) => item.trim()).filter(Boolean);
+      const steps = newSteps.value.split("\n").map((item) => item.trim()).filter(Boolean);
+
+      if (!name || !category || ingredients.length === 0 || steps.length === 0) {
+        alert("음식 이름, 분류, 준비물, 만드는 법을 모두 입력해 주세요.");
+        return;
+      }
+
+      const recipe = {
+        id: `custom-${Date.now()}`,
+        name,
+        categories: ["전체", category],
+        desc: `${name} 직접 추가한 우리집 레시피입니다.`,
+        servings: "가족분",
+        time: "직접확인",
+        rating: "5.0",
+        review: "0",
+        thumb: thumbByCategory[category] || "jorim",
+        short: name.slice(0, 1),
+        ingredients,
+        steps
+      };
+
+      saveCustomRecipe(recipe);
+      currentCategory = category;
+      showList(category);
+    });
   </script>
 </body>
 </html>
