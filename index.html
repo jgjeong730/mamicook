@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>엄마 레시피</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #111111;
+      --paper: #fffdf5;
+      --panel: #ffffff;
+      --accent: #005fcc;
+      --accent-dark: #003f88;
+      --warn: #b42318;
+      --line: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: rgba(0, 95, 204, 0.22);
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 24px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    button {
+      font: inherit;
+      touch-action: manipulation;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 760px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 16px 34px;
+    }
+
+    .screen-title {
+      font-size: clamp(40px, 10vw, 64px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 34px 0 14px;
+      font-size: clamp(32px, 7vw, 44px);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .recipe-button,
+    .home-button {
+      width: 100%;
+      min-height: 86px;
+      border: 4px solid var(--line);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 5px 0 var(--line);
+      font-size: clamp(30px, 8vw, 46px);
+      font-weight: 900;
+      line-height: 1.16;
+      text-align: left;
+    }
+
+    .recipe-button:active,
+    .home-button:active,
+    .ingredient-button:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 var(--line);
+    }
+
+    .recipe-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 20px;
+    }
+
+    .recipe-button .arrow {
+      flex: 0 0 auto;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .home-button {
+      margin-top: 34px;
+      padding: 22px 18px;
+      background: var(--warn);
+      text-align: center;
+    }
+
+    .ingredient-button {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 76px;
+      padding: 16px 14px;
+      border: 4px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 4px 0 var(--line);
+      font-size: clamp(26px, 6.5vw, 36px);
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .ingredient-button.checked {
+      background: #e8f7e8;
+      color: #164b19;
+    }
+
+    .ingredient-button.checked .ingredient-name {
+      text-decoration: line-through;
+      text-decoration-thickness: 4px;
+    }
+
+    .check-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .step-card {
+      border: 4px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px 16px;
+      box-shadow: 0 4px 0 var(--line);
+    }
+
+    .step-number {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #111111;
+      color: #ffffff;
+      font-size: clamp(24px, 6vw, 32px);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .step-text {
+      margin: 0;
+      font-size: clamp(26px, 6.5vw, 36px);
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    .helper-text {
+      margin-top: 10px;
+      font-size: clamp(24px, 5.8vw, 32px);
+      font-weight: 800;
+      color: #2f3a4a;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="homeScreen">
+      <h1 class="screen-title">엄마 레시피</h1>
+      <p class="helper-text">요리 이름을 크게 눌러서 보세요.</p>
+      <div id="recipeList" class="mt-8 grid gap-5"></div>
+    </section>
+
+    <section id="detailScreen" class="hidden">
+      <h1 id="recipeTitle" class="screen-title"></h1>
+
+      <h2 class="section-title">준비물</h2>
+      <div id="ingredientList" class="grid gap-4"></div>
+
+      <h2 class="section-title">만드는 법</h2>
+      <div id="stepList" class="grid gap-5"></div>
+
+      <button id="backHomeButton" type="button" class="home-button">처음 화면으로</button>
+    </section>
+  </main>
+
+  <script>
+    const recipes = [
+      {
+        name: "소고기 장조림",
+        ingredients: [
+          "소고기 홍두깨살 600g",
+          "메추리알 20개",
+          "꽈리고추 한 줌",
+          "진간장 1컵",
+          "물 4컵",
+          "설탕 3큰술",
+          "마늘 8쪽"
+        ],
+        steps: [
+          "소고기는 찬물에 30분 담가 핏물을 빼세요.",
+          "냄비에 고기와 물을 넣고 40분 정도 푹 삶으세요.",
+          "고기를 건져 결대로 먹기 좋게 찢으세요.",
+          "육수에 간장, 설탕, 마늘을 넣고 고기와 메추리알을 넣어 조리세요.",
+          "마지막에 꽈리고추를 넣고 5분 더 끓이면 됩니다."
+        ]
+      },
+      {
+        name: "연근조림",
+        ingredients: [
+          "연근 500g",
+          "식초 1큰술",
+          "진간장 5큰술",
+          "물 1컵",
+          "올리고당 3큰술",
+          "참기름 1큰술",
+          "통깨 조금"
+        ],
+        steps: [
+          "연근은 껍질을 벗기고 도톰하게 썰어 주세요.",
+          "끓는 물에 식초를 넣고 연근을 5분 데치세요.",
+          "팬에 간장, 물, 올리고당을 넣고 연근을 넣어 중불에서 조리세요.",
+          "국물이 자작해지면 약불로 줄이고 윤기가 나게 뒤적이세요.",
+          "불을 끄고 참기름과 통깨를 넣어 마무리하세요."
+        ]
+      },
+      {
+        name: "물김치",
+        ingredients: [
+          "배추 반 포기",
+          "무 1토막",
+          "쪽파 한 줌",
+          "배 반 개",
+          "마늘 5쪽",
+          "생강 조금",
+          "굵은소금 3큰술",
+          "물 8컵"
+        ],
+        steps: [
+          "배추와 무는 먹기 좋게 썰고 소금에 40분 절이세요.",
+          "절인 채소는 가볍게 헹궈 물기를 빼세요.",
+          "배, 마늘, 생강을 갈아 면보에 걸러 국물만 준비하세요.",
+          "큰 통에 채소와 쪽파를 담고 양념 국물과 물을 부으세요.",
+          "실온에서 반나절 두었다가 냉장고에 넣어 시원하게 드세요."
+        ]
+      },
+      {
+        name: "갈비찜",
+        ingredients: [
+          "소갈비 1kg",
+          "무 1토막",
+          "당근 1개",
+          "표고버섯 4개",
+          "진간장 반 컵",
+          "배즙 반 컵",
+          "다진 마늘 2큰술",
+          "참기름 1큰술"
+        ],
+        steps: [
+          "갈비는 찬물에 1시간 담가 핏물을 빼세요.",
+          "끓는 물에 갈비를 5분 데친 뒤 깨끗이 씻으세요.",
+          "냄비에 갈비, 간장, 배즙, 마늘, 물을 넣고 40분 끓이세요.",
+          "무와 당근, 버섯을 넣고 약불에서 25분 더 익히세요.",
+          "국물이 적당히 졸면 참기름을 둘러 마무리하세요."
+        ]
+      },
+      {
+        name: "매운탕",
+        ingredients: [
+          "생선 1마리",
+          "무 1토막",
+          "대파 1대",
+          "쑥갓 한 줌",
+          "청양고추 2개",
+          "고춧가루 3큰술",
+          "고추장 1큰술",
+          "다진 마늘 1큰술"
+        ],
+        steps: [
+          "생선은 깨끗이 손질하고 무는 납작하게 썰어 주세요.",
+          "냄비에 물과 무를 넣고 무가 반쯤 익을 때까지 끓이세요.",
+          "고춧가루, 고추장, 마늘을 풀고 생선을 넣으세요.",
+          "중불에서 15분 정도 끓이며 거품을 걷어 주세요.",
+          "대파, 고추, 쑥갓을 넣고 한소끔 더 끓이면 됩니다."
+        ]
+      }
+    ];
+
+    const homeScreen = document.querySelector("#homeScreen");
+    const detailScreen = document.querySelector("#detailScreen");
+    const recipeList = document.querySelector("#recipeList");
+    const recipeTitle = document.querySelector("#recipeTitle");
+    const ingredientList = document.querySelector("#ingredientList");
+    const stepList = document.querySelector("#stepList");
+    const backHomeButton = document.querySelector("#backHomeButton");
+
+    function showHome() {
+      detailScreen.classList.add("hidden");
+      homeScreen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function showRecipe(recipe) {
+      recipeTitle.textContent = recipe.name;
+      ingredientList.replaceChildren();
+      stepList.replaceChildren();
+
+      recipe.ingredients.forEach((ingredient) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "ingredient-button";
+        button.setAttribute("aria-pressed", "false");
+
+        const mark = document.createElement("span");
+        mark.className = "check-mark";
+        mark.setAttribute("aria-hidden", "true");
+
+        const name = document.createElement("span");
+        name.className = "ingredient-name";
+        name.textContent = ingredient;
+
+        button.append(mark, name);
+        button.addEventListener("click", () => {
+          const checked = button.classList.toggle("checked");
+          button.setAttribute("aria-pressed", String(checked));
+          mark.textContent = checked ? "✓" : "";
+        });
+
+        ingredientList.append(button);
+      });
+
+      recipe.steps.forEach((step, index) => {
+        const card = document.createElement("article");
+        card.className = "step-card";
+
+        const number = document.createElement("strong");
+        number.className = "step-number";
+        number.textContent = `순서 ${index + 1}`;
+
+        const text = document.createElement("p");
+        text.className = "step-text";
+        text.textContent = step;
+
+        card.append(number, text);
+        stepList.append(card);
+      });
+
+      homeScreen.classList.add("hidden");
+      detailScreen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    recipes.forEach((recipe) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "recipe-button";
+      button.innerHTML = `<span>${recipe.name}</span><span class="arrow" aria-hidden="true">›</span>`;
+      button.addEventListener("click", () => showRecipe(recipe));
+      recipeList.append(button);
+    });
+
+    backHomeButton.addEventListener("click", showHome);
+  </script>
+</body>
+</html>
