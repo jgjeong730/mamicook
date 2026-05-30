@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "dev": "powershell -NoProfile -Command \"Start-Process -WindowStyle Hidden -FilePath python -ArgumentList '-m','http.server','8002','--bind','127.0.0.1' -WorkingDirectory (Get-Location)\""
+  },
+  "devDependencies": {}
+}
